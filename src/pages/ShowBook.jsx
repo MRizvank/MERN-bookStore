@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useActionData, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import BackButton from "../components/BackButton";
 import Spinner from "../components/Spinner";
+import { useSnackbar } from "notistack";
 
 const ShowBook = () => {
   const [book, setBook] = useState([]);
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(() => {
     setLoading(true);
     axios
       .get(`http://localhost:5353/books/${id}`)
       .then((res) => {
         setBook(res.data);
-        console.log(res.data);
+        // console.log(res.data);
         setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        enqueueSnackbar("Error", { variant: "error" });
         setLoading(false);
       });
   }, []);
